@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd
 from datetime import date
 from supabase import create_client, Client
-
-
+from streamlit_autorefresh import st_autorefresh
+st_autorefresh(interval=5000)
 # ─────────────────────────────────────────────
 # KONFIGURASI HALAMAN
 # ─────────────────────────────────────────────
