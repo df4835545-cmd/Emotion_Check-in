@@ -345,25 +345,13 @@ except Exception:
 # FUNGSI DATABASE — USERS
 # ─────────────────────────────────────────────
 def authenticate(username: str, password: str) -> dict | None:
-    # Guru: pakai kolom 'password'
-    resp = (
-        supabase.table("users")
-        .select("*")
-        .ilike("username", username.strip())
-        .eq("password", password.strip())
-        .eq("role", "guru")
-        .limit(1)
-        .execute()
-    )
-    if resp.data:
-        return resp.data[0]
-    # Siswa: pakai kolom 'tanggal_lahir'
+    # Semua role (guru & siswa) pakai kolom tanggal_lahir sebagai password
     resp = (
         supabase.table("users")
         .select("*")
         .ilike("username", username.strip())
         .eq("tanggal_lahir", password.strip())
-        .eq("role", "siswa")
+        .in_("role", ["guru", "siswa"])
         .limit(1)
         .execute()
     )
@@ -517,12 +505,12 @@ if not st.session_state.logged_in:
 
     login_mode = st.radio(
         "Masuk sebagai:",
-        ["👨‍🏫 Guru / Siswa", "👨‍👩‍👦 Orang Tua"],
+        ["👨‍🏫 Dosen / Siswa", "👨‍👩‍👦 Orang Tua"],
         horizontal=True,
         label_visibility="visible"
     )
 
-    if login_mode == "👨‍🏫 Guru / Siswa":
+    if login_mode == "👨‍🏫 Dosen / Siswa":
         with st.form("login_form"):
             username = st.text_input("👤 Username (Nama)", placeholder="Contoh: Andi")
             password = st.text_input(
