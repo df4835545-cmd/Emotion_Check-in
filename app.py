@@ -34,9 +34,9 @@ st.markdown("""
     --surface-c: rgba(255,255,255,0.10);
     --border:    rgba(100,180,255,0.12);
     --border-h:  rgba(100,180,255,0.28);
-    --accent-1:  #38bdf8;   /* sky-400  */
-    --accent-2:  #0ea5e9;   /* sky-500  */
-    --accent-3:  #7dd3fc;   /* sky-300  */
+    --accent-1:  #38bdf8;
+    --accent-2:  #0ea5e9;
+    --accent-3:  #7dd3fc;
     --accent-glow: rgba(56,189,248,0.22);
     --text-1: #e0f2fe;
     --text-2: #7ec8e3;
@@ -51,7 +51,7 @@ html, body, [class*="css"] {
     font-size: 15px;
 }
 
-/* ── BACKGROUND: deep ocean mesh gradient ── */
+/* ── BACKGROUND ── */
 .stApp {
     background:
         radial-gradient(ellipse 90% 60% at 10% 0%, #0a2a5e 0%, transparent 55%),
@@ -61,7 +61,6 @@ html, body, [class*="css"] {
     min-height: 100vh;
 }
 
-/* subtle animated noise overlay */
 .stApp::before {
     content: '';
     position: fixed;
@@ -168,26 +167,41 @@ html, body, [class*="css"] {
 /* ── LOGIN WRAP ── */
 .login-wrap { max-width: 460px; margin: 3rem auto 0; }
 
-/* ── LOGOUT BUTTON ── */
-.logout-btn button,
-.logout-btn button:focus,
-.logout-btn button:active,
-.logout-btn button:focus:not(:active) {
-    background: rgba(30, 8, 8, 0.6) !important;
-    background-color: rgba(30, 8, 8, 0.6) !important;
+/* ── LOGOUT BUTTON — fixed with visible border ── */
+#logout-btn-wrap button,
+#logout-btn-wrap button:hover,
+#logout-btn-wrap button:focus,
+#logout-btn-wrap button:active,
+#logout-btn-wrap button:visited,
+#logout-btn-wrap > div > button,
+#logout-btn-wrap > div > button:hover,
+#logout-btn-wrap > div > button:focus,
+#logout-btn-wrap > div > button:active {
+    display: block !important;
+    width: 100% !important;
+    padding: 0.5rem 0.8rem !important;
+    background: rgba(30, 8, 8, 0.7) !important;
+    background-color: rgba(30, 8, 8, 0.7) !important;
     color: #f87171 !important;
-    border: 1px solid rgba(248,113,113,0.45) !important;
+    border: 2px solid rgba(248, 113, 113, 0.75) !important;
     border-radius: 10px !important;
     font-weight: 600 !important;
     font-size: 0.82rem !important;
-    box-shadow: none !important;
+    cursor: pointer !important;
+    text-align: center !important;
+    font-family: 'DM Sans', sans-serif !important;
+    box-shadow: 0 0 10px rgba(248, 113, 113, 0.15) !important;
+    outline: none !important;
+    -webkit-appearance: none !important;
+    transition: all 0.2s ease !important;
 }
-.logout-btn button:hover {
-    background: rgba(50, 10, 10, 0.75) !important;
-    background-color: rgba(50, 10, 10, 0.75) !important;
-    border-color: rgba(248,113,113,0.7) !important;
+#logout-btn-wrap button:hover,
+#logout-btn-wrap > div > button:hover {
+    background: rgba(50, 10, 10, 0.85) !important;
+    background-color: rgba(50, 10, 10, 0.85) !important;
+    border-color: #f87171 !important;
     color: #fca5a5 !important;
-    box-shadow: 0 0 12px rgba(248,113,113,0.2) !important;
+    box-shadow: 0 0 18px rgba(248, 113, 113, 0.3) !important;
 }
 
 /* ── FORM INPUTS ── */
@@ -242,7 +256,6 @@ input[type="text"], input[type="password"] {
     box-shadow: 0 8px 28px rgba(14,165,233,0.45) !important;
     background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%) !important;
 }
-/* Override Streamlit default merah di semua browser/device */
 button[data-testid="baseButton-primary"],
 [data-testid="stFormSubmitButton"] > button {
     background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important;
@@ -338,31 +351,21 @@ hr {
     gap: 8px;
 }
 
-/* ── DEMO TABLE ── */
-.stDataFrame [data-testid="StyledDataFrameDataCell"] {
-    color: var(--text-1) !important;
-    font-size: 0.82rem !important;
-}
-
 /* ── FORCE READABLE TEXT ── */
-/* Judul card, heading umum */
 h1, h2, h3, h4, h5, h6,
 .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
     color: #e0f2fe !important;
 }
-/* Semua teks markdown biasa */
 .stMarkdown p, .stMarkdown span, .stMarkdown li,
 [data-testid="stMarkdownContainer"] p {
     color: #cce8f4 !important;
 }
-/* Radio button teks */
 [data-testid="stRadio"] label,
 [data-testid="stRadio"] label span,
 [data-testid="stRadio"] div {
     color: #cce8f4 !important;
     font-weight: 600 !important;
 }
-/* Expander header "Panduan Akun Demo" */
 [data-testid="stExpander"] summary,
 [data-testid="stExpander"] summary p,
 [data-testid="stExpander"] summary span,
@@ -371,20 +374,21 @@ details summary p {
     font-weight: 600 !important;
 }
 details > summary { color: #cce8f4 !important; }
-/* Label "Masuk sebagai:" */
 [data-testid="stRadio"] > label,
 [data-testid="stRadio"] > div > label {
     color: #cce8f4 !important;
 }
-/* Semua teks di dalam widget */
 .stSelectbox label, .stTextInput label,
 .stTextArea label, .stSlider label {
     color: #a8d8f0 !important;
     font-weight: 600 !important;
 }
-/* Caption & expander */
 .streamlit-expanderHeader, .streamlit-expanderHeader p {
     color: #cce8f4 !important;
+}
+.stDataFrame [data-testid="StyledDataFrameDataCell"] {
+    color: var(--text-1) !important;
+    font-size: 0.82rem !important;
 }
 
 /* ── MOBILE RESPONSIVE ── */
@@ -396,23 +400,14 @@ details > summary { color: #cce8f4 !important; }
     .stat-num { font-size: 1.7rem !important; }
     .stat-lbl { font-size: 0.65rem !important; }
     .section-header { font-size: 0.75rem !important; }
-    /* Radio buttons lebih gede di HP */
     [data-testid="stRadio"] label {
         padding: 6px 16px !important;
         font-size: 0.88rem !important;
     }
-    /* Input text lebih jelas */
     .stTextInput > div > div > input {
         font-size: 1rem !important;
         padding: 0.7rem 1rem !important;
     }
-    /* Tombol lebih besar (kecuali logout) */
-    .stButton > button:not(.logout-btn > button) {
-        font-size: 1rem !important;
-        padding: 0.75rem 1rem !important;
-        min-height: 48px !important;
-    }
-    /* Sub-title di topbar */
     .topbar-info { font-size: 0.82rem !important; }
 }
 </style>
@@ -437,7 +432,6 @@ except Exception:
 # FUNGSI DATABASE — USERS
 # ─────────────────────────────────────────────
 def authenticate(username: str, password: str) -> dict | None:
-    # Semua role (guru & siswa) pakai kolom tanggal_lahir sebagai password
     resp = (
         supabase.table("users")
         .select("*")
@@ -468,7 +462,6 @@ def authenticate_ortu(username_anak: str, tanggal_lahir_anak: str) -> dict | Non
 def get_all_siswa() -> list[dict]:
     resp = supabase.table("users").select("*").eq("role", "siswa").execute()
     return resp.data or []
-
 
 # ─────────────────────────────────────────────
 # FUNGSI DATABASE — CHECK-IN
@@ -507,9 +500,7 @@ def insert_checkin(row: dict) -> bool:
         return False
 
 def delete_checkin_by_month(year: int, month: int) -> tuple[bool, int]:
-    """Hapus semua data check-in pada bulan & tahun tertentu. Return (sukses, jumlah_dihapus)."""
     try:
-        # Hitung dulu berapa baris yang akan dihapus
         start = f"{year:04d}-{month:02d}-01"
         if month == 12:
             end = f"{year+1:04d}-01-01"
@@ -682,35 +673,8 @@ else:
             f'<div class="topbar-info">{label}</div>',
             unsafe_allow_html=True
         )
+
     with col_logout:
-        st.markdown("""
-        <style>
-        div[data-testid="stButton"] > button {
-            all: unset !important;
-        }
-        #logout-btn-wrap button,
-        #logout-btn-wrap button:hover,
-        #logout-btn-wrap button:focus,
-        #logout-btn-wrap button:active,
-        #logout-btn-wrap button:visited {
-            display: block !important;
-            width: 100% !important;
-            padding: 0.5rem 0.8rem !important;
-            background: rgba(30,8,8,0.6) !important;
-            background-color: rgba(30,8,8,0.6) !important;
-            color: #f87171 !important;
-            border: 1px solid rgba(248,113,113,0.45) !important;
-            border-radius: 10px !important;
-            font-weight: 600 !important;
-            font-size: 0.82rem !important;
-            cursor: pointer !important;
-            text-align: center !important;
-            font-family: 'DM Sans', sans-serif !important;
-            box-shadow: none !important;
-            -webkit-appearance: none !important;
-        }
-        </style>
-        """, unsafe_allow_html=True)
         st.markdown('<div id="logout-btn-wrap">', unsafe_allow_html=True)
         if st.button("🚪 Logout", use_container_width=True, key="logout_btn"):
             st.session_state.logged_in = False
@@ -752,7 +716,7 @@ else:
             render_charts(df_anak)
 
     # ══════════════════════════
-    # ROLE: GURU (dosen)
+    # ROLE: GURU
     # ══════════════════════════
     elif role == "guru":
         st.markdown('<div class="section-header">📊 Dashboard Guru — Semua Data Siswa</div>', unsafe_allow_html=True)
@@ -811,7 +775,6 @@ else:
             st.markdown('<div class="section-header">🗑️ Hapus Data Check-In per Bulan</div>', unsafe_allow_html=True)
             st.warning("⚠️ **Perhatian:** Data yang dihapus **tidak dapat dikembalikan**. Pastikan sudah mengunduh atau mencatat data sebelum menghapus.")
 
-            # Tampilkan ringkasan data per bulan jika ada
             if not df_all.empty:
                 df_summary = df_all.copy()
                 df_summary["tanggal"] = pd.to_datetime(df_summary["tanggal"])
@@ -846,7 +809,6 @@ else:
 
             target_label = f"{bulan_list[bulan_hapus]} {tahun_hapus}"
 
-            # Cek preview berapa data yang akan dihapus
             if not df_all.empty:
                 df_prev = df_all.copy()
                 df_prev["tanggal"] = pd.to_datetime(df_prev["tanggal"])
@@ -860,7 +822,6 @@ else:
 
             st.markdown("")
 
-            # Double-confirm: checkbox + tombol
             konfirmasi = st.checkbox(
                 f"✅ Saya memahami bahwa data bulan **{target_label}** akan dihapus permanen",
                 key="konfirmasi_hapus"
@@ -959,3 +920,4 @@ else:
                 cols_show = [c for c in cols_show if c in df_mine.columns]
                 st.dataframe(df_mine[cols_show], use_container_width=True, hide_index=True)
                 render_charts(df_mine)
+                
