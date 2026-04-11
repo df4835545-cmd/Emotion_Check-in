@@ -186,11 +186,12 @@ html, body, [class*="css"] {
 /* ── FORM INPUTS ── */
 .stTextInput > div > div > input,
 input[type="text"], input[type="password"] {
-    background: rgba(10,30,60,0.6) !important;
-    border: 1px solid var(--border) !important;
+    background: rgba(5,20,45,0.85) !important;
+    border: 1px solid rgba(100,180,255,0.25) !important;
     border-radius: 10px !important;
-    color: var(--text-1) !important;
+    color: #e8f4ff !important;
     font-family: 'DM Sans', sans-serif !important;
+    font-size: 0.95rem !important;
     transition: border-color 0.2s !important;
 }
 .stTextInput > div > div > input:focus {
@@ -216,22 +217,32 @@ input[type="text"], input[type="password"] {
 }
 
 /* ── PRIMARY BUTTON ── */
-.stButton > button[kind="primary"] {
+.stButton > button[kind="primary"],
+.stButton > button[kind="primary"]:not([disabled]) {
     background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important;
     border: none !important;
     border-radius: 11px !important;
-    font-weight: 600 !important;
-    color: #fff !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
     padding: 0.65rem 1.8rem !important;
-    font-size: 0.92rem !important;
+    font-size: 0.95rem !important;
     letter-spacing: 0.02em !important;
     transition: all 0.2s !important;
-    box-shadow: 0 4px 20px rgba(14,165,233,0.25) !important;
+    box-shadow: 0 4px 20px rgba(14,165,233,0.3) !important;
 }
 .stButton > button[kind="primary"]:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 8px 28px rgba(14,165,233,0.4) !important;
+    box-shadow: 0 8px 28px rgba(14,165,233,0.45) !important;
     background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%) !important;
+}
+/* Override Streamlit default merah di semua browser/device */
+button[data-testid="baseButton-primary"],
+[data-testid="stFormSubmitButton"] > button {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important;
+    background-color: #0ea5e9 !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
 }
 
 /* ── TABS ── */
@@ -263,10 +274,12 @@ input[type="text"], input[type="password"] {
 .stError   { background: rgba(248,113,113,0.08) !important; border-color: rgba(248,113,113,0.25) !important; }
 
 /* ── LABELS ── */
-label, .stSlider label, [data-testid="stWidgetLabel"] {
-    color: var(--text-2) !important;
-    font-weight: 500 !important;
-    font-size: 0.85rem !important;
+label, .stSlider label, [data-testid="stWidgetLabel"],
+[data-testid="stWidgetLabel"] p, .stRadio label,
+[data-baseweb="radio"] label span {
+    color: #a8d8f0 !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
 }
 
 /* ── SLIDER ── */
@@ -322,6 +335,35 @@ hr {
 .stDataFrame [data-testid="StyledDataFrameDataCell"] {
     color: var(--text-1) !important;
     font-size: 0.82rem !important;
+}
+
+/* ── MOBILE RESPONSIVE ── */
+@media (max-width: 768px) {
+    .main-title { font-size: 1.5rem !important; }
+    .sub-title { font-size: 0.78rem !important; }
+    .login-wrap { margin: 1rem auto 0 !important; padding: 0 0.5rem; }
+    .card { padding: 1.4rem 1.2rem !important; border-radius: 16px !important; }
+    .stat-num { font-size: 1.7rem !important; }
+    .stat-lbl { font-size: 0.65rem !important; }
+    .section-header { font-size: 0.75rem !important; }
+    /* Radio buttons lebih gede di HP */
+    [data-testid="stRadio"] label {
+        padding: 6px 16px !important;
+        font-size: 0.88rem !important;
+    }
+    /* Input text lebih jelas */
+    .stTextInput > div > div > input {
+        font-size: 1rem !important;
+        padding: 0.7rem 1rem !important;
+    }
+    /* Tombol lebih besar */
+    .stButton > button {
+        font-size: 1rem !important;
+        padding: 0.75rem 1rem !important;
+        min-height: 48px !important;
+    }
+    /* Sub-title di topbar */
+    .topbar-info { font-size: 0.82rem !important; }
 }
 </style>
 """, unsafe_allow_html=True)
