@@ -170,11 +170,11 @@ html, body, [class*="css"] {
 /* ── LOGIN WRAP ── */
 .login-wrap { max-width: 460px; margin: 3rem auto 0; }
 
-/* ── LOGOUT BUTTON ── */
-[data-testid="column"]:last-child [data-testid="stBaseButton-secondary"],
-[data-testid="column"]:last-child [data-testid="stBaseButton-secondary"]:focus,
-[data-testid="column"]:last-child [data-testid="stBaseButton-secondary"]:active,
-[data-testid="column"]:last-child button {
+/* ── LOGOUT BUTTON — override primary di kolom terakhir ── */
+[data-testid="column"]:last-child [data-testid="stBaseButton-primary"],
+[data-testid="column"]:last-child [data-testid="stBaseButton-primary"]:focus,
+[data-testid="column"]:last-child [data-testid="stBaseButton-primary"]:active,
+[data-testid="column"]:last-child button[kind="primary"] {
     background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
     background-color: #ef4444 !important;
     color: #ffffff !important;
@@ -186,7 +186,8 @@ html, body, [class*="css"] {
     transition: all 0.2s ease !important;
     width: 100% !important;
 }
-[data-testid="column"]:last-child button:hover {
+[data-testid="column"]:last-child [data-testid="stBaseButton-primary"]:hover,
+[data-testid="column"]:last-child button[kind="primary"]:hover {
     background: linear-gradient(135deg, #f87171 0%, #ef4444 100%) !important;
     background-color: #f87171 !important;
     color: #ffffff !important;
@@ -665,7 +666,7 @@ else:
         )
 
     with col_logout:
-        if st.button("🚪 Logout", key="logout_btn", use_container_width=True):
+        if st.button("🚪 Logout", key="logout_btn", use_container_width=True, type="primary"):
             st.session_state.logged_in = False
             st.session_state.user = None
             st.rerun()
@@ -908,3 +909,4 @@ else:
                 cols_show = [c for c in cols_show if c in df_mine.columns]
                 st.dataframe(df_mine[cols_show], use_container_width=True, hide_index=True)
                 render_charts(df_mine)
+                
