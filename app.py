@@ -172,27 +172,27 @@ html, body, [class*="css"] {
 
 /* ── LOGOUT BUTTON ── */
 div[data-testid="stButton"].logout-btn > button,
-div[data-testid="stButton"].logout-btn > button:hover,
 div[data-testid="stButton"].logout-btn > button:focus,
 div[data-testid="stButton"].logout-btn > button:active {
-    background: rgba(30, 8, 8, 0.65) !important;
-    background-color: rgba(30, 8, 8, 0.65) !important;
-    color: #f87171 !important;
-    border: 2px solid rgba(248,113,113,0.75) !important;
-    border-radius: 10px !important;
-    font-weight: 600 !important;
-    font-size: 0.82rem !important;
-    box-shadow: 0 0 10px rgba(248,113,113,0.12) !important;
-    padding: 0.45rem 0.6rem !important;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    background-color: #ef4444 !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 11px !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    box-shadow: 0 4px 20px rgba(239,68,68,0.3) !important;
+    padding: 0.65rem 1.8rem !important;
     transition: all 0.2s ease !important;
     width: 100% !important;
 }
 div[data-testid="stButton"].logout-btn > button:hover {
-    background: rgba(60,10,10,0.85) !important;
-    background-color: rgba(60,10,10,0.85) !important;
-    border-color: #f87171 !important;
-    color: #fca5a5 !important;
-    box-shadow: 0 0 18px rgba(248,113,113,0.28) !important;
+    background: linear-gradient(135deg, #f87171 0%, #ef4444 100%) !important;
+    background-color: #f87171 !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 8px 28px rgba(239,68,68,0.45) !important;
+    transform: translateY(-2px) !important;
 }
 
 /* ── FORM INPUTS ── */
