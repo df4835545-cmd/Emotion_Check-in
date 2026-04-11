@@ -113,7 +113,7 @@ html, body, [class*="css"] {
     border-radius: 999px; font-size: 0.7rem;
     font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px;
 }
-.badge-dosen { background: rgba(56,189,248,0.15); color: var(--accent-1); border: 1px solid rgba(56,189,248,0.3); }
+.badge-guru  { background: rgba(56,189,248,0.15); color: var(--accent-1); border: 1px solid rgba(56,189,248,0.3); }
 .badge-siswa { background: rgba(52,211,153,0.12); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
 .badge-ortu  { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
 
@@ -416,6 +416,34 @@ def insert_checkin(row: dict) -> bool:
         st.error(f"❌ Gagal menyimpan data: {e}")
         return False
 
+def delete_checkin_by_month(year: int, month: int) -> tuple[bool, int]:
+    """Hapus semua data check-in pada bulan & tahun tertentu. Return (sukses, jumlah_dihapus)."""
+    try:
+        # Hitung dulu berapa baris yang akan dihapus
+        start = f"{year:04d}-{month:02d}-01"
+        if month == 12:
+            end = f"{year+1:04d}-01-01"
+        else:
+            end = f"{year:04d}-{month+1:02d}-01"
+
+        count_resp = (
+            supabase.table("checkin")
+            .select("id", count="exact")
+            .gte("tanggal", start)
+            .lt("tanggal", end)
+            .execute()
+        )
+        jumlah = count_resp.count or 0
+
+        if jumlah == 0:
+            return True, 0
+
+        supabase.table("checkin").delete().gte("tanggal", start).lt("tanggal", end).execute()
+        return True, jumlah
+    except Exception as e:
+        st.error(f"❌ Gagal menghapus data: {e}")
+        return False, 0
+
 # ─────────────────────────────────────────────
 # HELPER CHART & STATS
 # ─────────────────────────────────────────────
@@ -534,7 +562,7 @@ if not st.session_state.logged_in:
 
     with st.expander("💡 Panduan Akun Demo"):
         demo = {
-            "Role":          ["Dosen", "Siswa", "Siswa", "Orang Tua (login pakai data anak)"],
+            "Role":          ["Guru", "Siswa", "Siswa", "Orang Tua (login pakai data anak)"],
             "Username":      ["Bu Rina", "Andi", "Budi", "→ pakai username: Andi"],
             "Tanggal Lahir": ["123", "111", "222", "→ pakai tgl lahir: 111"],
         }
@@ -556,8 +584,8 @@ else:
         if is_ortu_mode:
             label = f'👨‍👩‍👦 Mode Orang Tua — memantau <strong>{user["nama"]}</strong> &nbsp;<span class="badge badge-ortu">Orang Tua</span>'
         else:
-            badge_cls = "badge-dosen" if role == "dosen" else "badge-siswa"
-            badge_lbl = "Dosen" if role == "dosen" else "Siswa"
+            badge_cls = "badge-guru" if role == "dosen" else "badge-siswa"
+            badge_lbl = "Guru" if role == "dosen" else "Siswa"
             label = f'👋 Halo, <strong>{user["nama"]}</strong> &nbsp;<span class="badge {badge_cls}">{badge_lbl}</span>'
 
         st.markdown(
@@ -606,10 +634,10 @@ else:
             render_charts(df_anak)
 
     # ══════════════════════════
-    # ROLE: DOSEN
+    # ROLE: GURU (dosen)
     # ══════════════════════════
     elif role == "dosen":
-        st.markdown('<div class="section-header">📊 Dashboard Dosen — Semua Data Siswa</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-header">📊 Dashboard Guru — Semua Data Siswa</div>', unsafe_allow_html=True)
 
         with st.spinner("Memuat data..."):
             df_all     = get_all_checkin()
@@ -626,7 +654,7 @@ else:
         )
 
         st.markdown('<div class="section-header">🔍 Filter & Eksplorasi Data</div>', unsafe_allow_html=True)
-        tab1, tab2 = st.tabs(["📋 Tabel Data", "📈 Grafik"])
+        tab1, tab2, tab3 = st.tabs(["📋 Tabel Data", "📈 Grafik", "🗑️ Kelola Data"])
 
         with tab1:
             nama_opts   = ["Semua Siswa"] + sorted(s["nama"] for s in siswa_list)
@@ -660,6 +688,92 @@ else:
                     .mean().reset_index().sort_values("tanggal").set_index("tanggal")
                 )
                 render_charts(df_g_agg.reset_index())
+
+        with tab3:
+            st.markdown('<div class="section-header">🗑️ Hapus Data Check-In per Bulan</div>', unsafe_allow_html=True)
+            st.warning("⚠️ **Perhatian:** Data yang dihapus **tidak dapat dikembalikan**. Pastikan sudah mengunduh atau mencatat data sebelum menghapus.")
+
+            # Tampilkan ringkasan data per bulan jika ada
+            if not df_all.empty:
+                df_summary = df_all.copy()
+                df_summary["tanggal"] = pd.to_datetime(df_summary["tanggal"])
+                df_summary["bulan"] = df_summary["tanggal"].dt.to_period("M").astype(str)
+                summary = df_summary.groupby("bulan").size().reset_index(name="jumlah_checkin")
+                summary.columns = ["Bulan", "Jumlah Check-In"]
+                st.markdown("**📅 Ringkasan Data per Bulan:**")
+                st.dataframe(summary, use_container_width=True, hide_index=True)
+                st.markdown("---")
+
+            import calendar
+            col_y, col_m = st.columns(2)
+            with col_y:
+                tahun_hapus = st.selectbox(
+                    "📆 Pilih Tahun",
+                    options=list(range(date.today().year, date.today().year - 5, -1)),
+                    key="del_year"
+                )
+            with col_m:
+                bulan_list = {
+                    1: "Januari", 2: "Februari", 3: "Maret", 4: "April",
+                    5: "Mei", 6: "Juni", 7: "Juli", 8: "Agustus",
+                    9: "September", 10: "Oktober", 11: "November", 12: "Desember"
+                }
+                bulan_hapus = st.selectbox(
+                    "📅 Pilih Bulan",
+                    options=list(bulan_list.keys()),
+                    format_func=lambda x: bulan_list[x],
+                    index=date.today().month - 1,
+                    key="del_month"
+                )
+
+            target_label = f"{bulan_list[bulan_hapus]} {tahun_hapus}"
+
+            # Cek preview berapa data yang akan dihapus
+            if not df_all.empty:
+                df_prev = df_all.copy()
+                df_prev["tanggal"] = pd.to_datetime(df_prev["tanggal"])
+                start_prev = pd.Timestamp(tahun_hapus, bulan_hapus, 1)
+                end_prev   = start_prev + pd.offsets.MonthEnd(0)
+                count_prev = len(df_prev[(df_prev["tanggal"] >= start_prev) & (df_prev["tanggal"] <= end_prev)])
+                st.info(f"ℹ️ Data untuk **{target_label}**: **{count_prev} entri** check-in.")
+            else:
+                count_prev = 0
+                st.info("ℹ️ Tidak ada data check-in sama sekali.")
+
+            st.markdown("")
+
+            # Double-confirm: checkbox + tombol
+            konfirmasi = st.checkbox(
+                f"✅ Saya memahami bahwa data bulan **{target_label}** akan dihapus permanen",
+                key="konfirmasi_hapus"
+            )
+
+            if konfirmasi:
+                if st.button(
+                    f"🗑️ Hapus Semua Data — {target_label}",
+                    type="primary",
+                    use_container_width=True,
+                    key="btn_hapus"
+                ):
+                    if count_prev == 0:
+                        st.warning(f"⚠️ Tidak ada data untuk bulan {target_label}.")
+                    else:
+                        with st.spinner(f"Menghapus {count_prev} entri..."):
+                            ok, n = delete_checkin_by_month(tahun_hapus, bulan_hapus)
+                        if ok:
+                            if n == 0:
+                                st.warning(f"⚠️ Tidak ada data ditemukan untuk {target_label}.")
+                            else:
+                                st.success(f"✅ Berhasil menghapus **{n} entri** check-in bulan {target_label}.")
+                                st.rerun()
+            else:
+                st.button(
+                    f"🗑️ Hapus Semua Data — {target_label}",
+                    type="primary",
+                    use_container_width=True,
+                    disabled=True,
+                    key="btn_hapus_disabled"
+                )
 
     # ══════════════════════════
     # ROLE: SISWA
