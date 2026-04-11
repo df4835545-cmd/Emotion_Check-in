@@ -683,12 +683,40 @@ else:
             unsafe_allow_html=True
         )
     with col_logout:
-        st.markdown('<div class="logout-btn">', unsafe_allow_html=True)
-        if st.button("🚪 Logout", use_container_width=True):
+        st.markdown("""
+        <style>
+        div[data-testid="stButton"] > button {
+            all: unset !important;
+        }
+        #logout-btn-wrap button,
+        #logout-btn-wrap button:hover,
+        #logout-btn-wrap button:focus,
+        #logout-btn-wrap button:active,
+        #logout-btn-wrap button:visited {
+            display: block !important;
+            width: 100% !important;
+            padding: 0.5rem 0.8rem !important;
+            background: rgba(30,8,8,0.6) !important;
+            background-color: rgba(30,8,8,0.6) !important;
+            color: #f87171 !important;
+            border: 1px solid rgba(248,113,113,0.45) !important;
+            border-radius: 10px !important;
+            font-weight: 600 !important;
+            font-size: 0.82rem !important;
+            cursor: pointer !important;
+            text-align: center !important;
+            font-family: 'DM Sans', sans-serif !important;
+            box-shadow: none !important;
+            -webkit-appearance: none !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        st.markdown('<div id="logout-btn-wrap">', unsafe_allow_html=True)
+        if st.button("🚪 Logout", use_container_width=True, key="logout_btn"):
             st.session_state.logged_in = False
             st.session_state.user = None
             st.rerun()
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("---")
 
