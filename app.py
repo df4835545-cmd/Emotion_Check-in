@@ -504,7 +504,7 @@ if not st.session_state.logged_in:
 
     login_mode = st.radio(
         "Masuk sebagai:",
-        ["👨‍🏫 Dosen / Siswa", "👨‍👩‍👦 Orang Tua"],
+        ["👨‍🏫 Guru / Siswa", "👨‍👩‍👦 Orang Tua"],
         horizontal=True,
         label_visibility="visible"
     )
