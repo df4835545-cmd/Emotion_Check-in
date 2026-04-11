@@ -169,24 +169,25 @@ html, body, [class*="css"] {
 .login-wrap { max-width: 460px; margin: 3rem auto 0; }
 
 /* ── LOGOUT BUTTON ── */
-.logout-btn > button,
-.logout-btn > button[kind="secondary"],
-.logout-btn [data-testid="baseButton-secondary"] {
-    background: rgba(248,113,113,0.07) !important;
-    background-color: rgba(248,113,113,0.07) !important;
+.logout-btn button,
+.logout-btn button:focus,
+.logout-btn button:active,
+.logout-btn button:focus:not(:active) {
+    background: rgba(30, 8, 8, 0.6) !important;
+    background-color: rgba(30, 8, 8, 0.6) !important;
     color: #f87171 !important;
-    border: 1px solid rgba(248,113,113,0.35) !important;
+    border: 1px solid rgba(248,113,113,0.45) !important;
     border-radius: 10px !important;
     font-weight: 600 !important;
     font-size: 0.82rem !important;
-    transition: all 0.2s !important;
+    box-shadow: none !important;
 }
-.logout-btn > button:hover,
-.logout-btn [data-testid="baseButton-secondary"]:hover {
-    background: rgba(248,113,113,0.18) !important;
-    background-color: rgba(248,113,113,0.18) !important;
-    border-color: rgba(248,113,113,0.55) !important;
+.logout-btn button:hover {
+    background: rgba(50, 10, 10, 0.75) !important;
+    background-color: rgba(50, 10, 10, 0.75) !important;
+    border-color: rgba(248,113,113,0.7) !important;
     color: #fca5a5 !important;
+    box-shadow: 0 0 12px rgba(248,113,113,0.2) !important;
 }
 
 /* ── FORM INPUTS ── */
