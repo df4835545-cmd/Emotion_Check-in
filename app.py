@@ -169,18 +169,24 @@ html, body, [class*="css"] {
 .login-wrap { max-width: 460px; margin: 3rem auto 0; }
 
 /* ── LOGOUT BUTTON ── */
-.logout-btn > button {
+.logout-btn > button,
+.logout-btn > button[kind="secondary"],
+.logout-btn [data-testid="baseButton-secondary"] {
     background: rgba(248,113,113,0.07) !important;
-    color: var(--danger) !important;
-    border: 1px solid rgba(248,113,113,0.25) !important;
+    background-color: rgba(248,113,113,0.07) !important;
+    color: #f87171 !important;
+    border: 1px solid rgba(248,113,113,0.35) !important;
     border-radius: 10px !important;
     font-weight: 600 !important;
     font-size: 0.82rem !important;
     transition: all 0.2s !important;
 }
-.logout-btn > button:hover {
-    background: rgba(248,113,113,0.14) !important;
-    border-color: rgba(248,113,113,0.45) !important;
+.logout-btn > button:hover,
+.logout-btn [data-testid="baseButton-secondary"]:hover {
+    background: rgba(248,113,113,0.18) !important;
+    background-color: rgba(248,113,113,0.18) !important;
+    border-color: rgba(248,113,113,0.55) !important;
+    color: #fca5a5 !important;
 }
 
 /* ── FORM INPUTS ── */
@@ -399,8 +405,8 @@ details > summary { color: #cce8f4 !important; }
         font-size: 1rem !important;
         padding: 0.7rem 1rem !important;
     }
-    /* Tombol lebih besar */
-    .stButton > button {
+    /* Tombol lebih besar (kecuali logout) */
+    .stButton > button:not(.logout-btn > button) {
         font-size: 1rem !important;
         padding: 0.75rem 1rem !important;
         min-height: 48px !important;
