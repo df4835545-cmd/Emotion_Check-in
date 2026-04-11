@@ -4,13 +4,6 @@ from datetime import date
 from supabase import create_client, Client
 from streamlit_autorefresh import st_autorefresh
 
-# ── LOGOUT dicek SEBELUM autorefresh ──
-if st.query_params.get("logout") == "1":
-    st.session_state.logged_in = False
-    st.session_state.user = None
-    st.query_params.clear()
-    st.rerun()
-
 # Autorefresh hanya aktif saat sudah login
 if st.session_state.get("logged_in", False):
     st_autorefresh(interval=5000)
@@ -177,30 +170,29 @@ html, body, [class*="css"] {
 /* ── LOGIN WRAP ── */
 .login-wrap { max-width: 460px; margin: 3rem auto 0; }
 
-/* ── LOGOUT BUTTON — pure HTML anchor, no Streamlit button ── */
-.logout-anchor {
-    display: block;
-    padding: 0.45rem 0.6rem;
-    background: rgba(30, 8, 8, 0.65);
+/* ── LOGOUT BUTTON ── */
+div[data-testid="stButton"].logout-btn > button,
+div[data-testid="stButton"].logout-btn > button:hover,
+div[data-testid="stButton"].logout-btn > button:focus,
+div[data-testid="stButton"].logout-btn > button:active {
+    background: rgba(30, 8, 8, 0.65) !important;
+    background-color: rgba(30, 8, 8, 0.65) !important;
     color: #f87171 !important;
-    border: 2px solid rgba(248, 113, 113, 0.75);
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.82rem;
-    cursor: pointer;
-    text-align: center;
-    font-family: 'DM Sans', sans-serif;
-    box-shadow: 0 0 10px rgba(248, 113, 113, 0.12);
-    text-decoration: none !important;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
+    border: 2px solid rgba(248,113,113,0.75) !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    font-size: 0.82rem !important;
+    box-shadow: 0 0 10px rgba(248,113,113,0.12) !important;
+    padding: 0.45rem 0.6rem !important;
+    transition: all 0.2s ease !important;
+    width: 100% !important;
 }
-.logout-anchor:hover {
-    background: rgba(60, 10, 10, 0.85);
-    border-color: #f87171;
+div[data-testid="stButton"].logout-btn > button:hover {
+    background: rgba(60,10,10,0.85) !important;
+    background-color: rgba(60,10,10,0.85) !important;
+    border-color: #f87171 !important;
     color: #fca5a5 !important;
-    box-shadow: 0 0 18px rgba(248, 113, 113, 0.28);
-    text-decoration: none !important;
+    box-shadow: 0 0 18px rgba(248,113,113,0.28) !important;
 }
 
 /* ── FORM INPUTS ── */
@@ -674,10 +666,12 @@ else:
         )
 
     with col_logout:
-        st.markdown(
-            '<a href="?logout=1" class="logout-anchor">🚪 Logout</a>',
-            unsafe_allow_html=True
-        )
+        st.markdown('<div class="logout-btn">', unsafe_allow_html=True)
+        if st.button("🚪 Logout", key="logout_btn", use_container_width=True):
+            st.session_state.logged_in = False
+            st.session_state.user = None
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("---")
 
