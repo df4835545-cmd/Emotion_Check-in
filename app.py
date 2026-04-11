@@ -510,7 +510,7 @@ if not st.session_state.logged_in:
         label_visibility="visible"
     )
 
-    if login_mode == "👨‍🏫 Dosen / Siswa":
+    if login_mode == "👨‍🏫 Guru / Siswa":
         with st.form("login_form"):
             username = st.text_input("👤 Username (Nama)", placeholder="Contoh: Andi")
             password = st.text_input(
