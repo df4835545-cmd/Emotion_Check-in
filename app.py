@@ -337,6 +337,49 @@ hr {
     font-size: 0.82rem !important;
 }
 
+/* ── FORCE READABLE TEXT ── */
+/* Judul card, heading umum */
+h1, h2, h3, h4, h5, h6,
+.stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
+    color: #e0f2fe !important;
+}
+/* Semua teks markdown biasa */
+.stMarkdown p, .stMarkdown span, .stMarkdown li,
+[data-testid="stMarkdownContainer"] p {
+    color: #cce8f4 !important;
+}
+/* Radio button teks */
+[data-testid="stRadio"] label,
+[data-testid="stRadio"] label span,
+[data-testid="stRadio"] div {
+    color: #cce8f4 !important;
+    font-weight: 600 !important;
+}
+/* Expander header "Panduan Akun Demo" */
+[data-testid="stExpander"] summary,
+[data-testid="stExpander"] summary p,
+[data-testid="stExpander"] summary span,
+details summary p {
+    color: #cce8f4 !important;
+    font-weight: 600 !important;
+}
+details > summary { color: #cce8f4 !important; }
+/* Label "Masuk sebagai:" */
+[data-testid="stRadio"] > label,
+[data-testid="stRadio"] > div > label {
+    color: #cce8f4 !important;
+}
+/* Semua teks di dalam widget */
+.stSelectbox label, .stTextInput label,
+.stTextArea label, .stSlider label {
+    color: #a8d8f0 !important;
+    font-weight: 600 !important;
+}
+/* Caption & expander */
+.streamlit-expanderHeader, .streamlit-expanderHeader p {
+    color: #cce8f4 !important;
+}
+
 /* ── MOBILE RESPONSIVE ── */
 @media (max-width: 768px) {
     .main-title { font-size: 1.5rem !important; }
@@ -539,7 +582,7 @@ st.markdown(
 if not st.session_state.logged_in:
     st.markdown('<div class="login-wrap">', unsafe_allow_html=True)
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown("### 🔐 Masuk ke Sistem")
+    st.markdown('<h3 style="color:#e0f2fe;font-weight:700;margin-bottom:0.5rem">🔐 Masuk ke Sistem</h3>', unsafe_allow_html=True)
     st.markdown("---")
 
     login_mode = st.radio(
