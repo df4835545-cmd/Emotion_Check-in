@@ -170,29 +170,23 @@ html, body, [class*="css"] {
 /* ── LOGIN WRAP ── */
 .login-wrap { max-width: 460px; margin: 3rem auto 0; }
 
-/* ── LOGOUT BUTTON — override primary di kolom terakhir ── */
-[data-testid="column"]:last-child [data-testid="stBaseButton-primary"],
-[data-testid="column"]:last-child [data-testid="stBaseButton-primary"]:focus,
-[data-testid="column"]:last-child [data-testid="stBaseButton-primary"]:active,
-[data-testid="column"]:last-child button[kind="primary"] {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+/* ── LOGOUT BUTTON ── */
+/* key="logout_btn" → Streamlit render sebagai id unik di DOM */
+button[data-testid="stBaseButton-primary"][kind="primary"]:nth-of-type(1) { }
+/* Semua primary button yang BUKAN di dalam form → merah */
+:not(form) > div > div > div > div [data-testid="stBaseButton-primary"],
+:not(form) > div > div > div > div [data-testid="stBaseButton-primary"]:focus {
+    background: linear-gradient(135deg,#ef4444,#dc2626) !important;
     background-color: #ef4444 !important;
-    color: #ffffff !important;
-    border: none !important;
-    border-radius: 11px !important;
-    font-weight: 700 !important;
-    font-size: 0.95rem !important;
-    box-shadow: 0 4px 20px rgba(239,68,68,0.35) !important;
-    transition: all 0.2s ease !important;
-    width: 100% !important;
+    box-shadow: 0 4px 20px rgba(239,68,68,0.4) !important;
 }
-[data-testid="column"]:last-child [data-testid="stBaseButton-primary"]:hover,
-[data-testid="column"]:last-child button[kind="primary"]:hover {
-    background: linear-gradient(135deg, #f87171 0%, #ef4444 100%) !important;
-    background-color: #f87171 !important;
-    color: #ffffff !important;
-    box-shadow: 0 8px 28px rgba(239,68,68,0.5) !important;
-    transform: translateY(-2px) !important;
+/* Primary button di dalam form → tetap biru */
+form [data-testid="stBaseButton-primary"],
+[data-testid="stForm"] [data-testid="stBaseButton-primary"],
+[data-testid="stFormSubmitButton"] [data-testid="stBaseButton-primary"] {
+    background: linear-gradient(135deg,#0ea5e9,#0284c7) !important;
+    background-color: #0ea5e9 !important;
+    box-shadow: 0 4px 20px rgba(14,165,233,0.3) !important;
 }
 
 /* ── FORM INPUTS ── */
@@ -666,6 +660,7 @@ else:
         )
 
     with col_logout:
+        # Tombol logout pakai st.button type=primary, lalu CSS override via global style
         if st.button("🚪 Logout", key="logout_btn", use_container_width=True, type="primary"):
             st.session_state.logged_in = False
             st.session_state.user = None
@@ -909,4 +904,3 @@ else:
                 cols_show = [c for c in cols_show if c in df_mine.columns]
                 st.dataframe(df_mine[cols_show], use_container_width=True, hide_index=True)
                 render_charts(df_mine)
-                
