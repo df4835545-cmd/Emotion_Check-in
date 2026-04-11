@@ -3,7 +3,17 @@ import pandas as pd
 from datetime import date
 from supabase import create_client, Client
 from streamlit_autorefresh import st_autorefresh
-st_autorefresh(interval=5000)
+
+# ── LOGOUT dicek SEBELUM autorefresh ──
+if st.query_params.get("logout") == "1":
+    st.session_state.logged_in = False
+    st.session_state.user = None
+    st.query_params.clear()
+    st.rerun()
+
+# Autorefresh hanya aktif saat sudah login
+if st.session_state.get("logged_in", False):
+    st_autorefresh(interval=5000)
 
 # ─────────────────────────────────────────────
 # KONFIGURASI HALAMAN
@@ -668,13 +678,6 @@ else:
             '<a href="?logout=1" class="logout-anchor">🚪 Logout</a>',
             unsafe_allow_html=True
         )
-
-    # Handle logout via query param
-    if st.query_params.get("logout") == "1":
-        st.session_state.logged_in = False
-        st.session_state.user = None
-        st.query_params.clear()
-        st.rerun()
 
     st.markdown("---")
 
