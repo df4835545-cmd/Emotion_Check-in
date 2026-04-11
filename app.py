@@ -4,6 +4,7 @@ from datetime import date
 from supabase import create_client, Client
 from streamlit_autorefresh import st_autorefresh
 st_autorefresh(interval=5000)
+
 # ─────────────────────────────────────────────
 # KONFIGURASI HALAMAN
 # ─────────────────────────────────────────────
@@ -15,104 +16,312 @@ st.set_page_config(
 )
 
 # ─────────────────────────────────────────────
-# CUSTOM CSS
+# CUSTOM CSS — "Deep Ocean" Theme
 # ─────────────────────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap');
 
-html, body, [class*="css"] { font-family: 'Plus Jakarta Sans', sans-serif; }
+:root {
+    --ocean-900: #020c1b;
+    --ocean-800: #050f20;
+    --ocean-700: #071628;
+    --ocean-600: #0a1f3a;
+    --ocean-500: #0d2d52;
+    --ocean-400: #114075;
+    --surface-a: rgba(255,255,255,0.04);
+    --surface-b: rgba(255,255,255,0.07);
+    --surface-c: rgba(255,255,255,0.10);
+    --border:    rgba(100,180,255,0.12);
+    --border-h:  rgba(100,180,255,0.28);
+    --accent-1:  #38bdf8;   /* sky-400  */
+    --accent-2:  #0ea5e9;   /* sky-500  */
+    --accent-3:  #7dd3fc;   /* sky-300  */
+    --accent-glow: rgba(56,189,248,0.22);
+    --text-1: #e0f2fe;
+    --text-2: #7ec8e3;
+    --text-3: #4a90a4;
+    --danger: #f87171;
+    --success: #34d399;
+    --warning: #fbbf24;
+}
 
+html, body, [class*="css"] {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+}
+
+/* ── BACKGROUND: deep ocean mesh gradient ── */
 .stApp {
-    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    background:
+        radial-gradient(ellipse 90% 60% at 10% 0%, #0a2a5e 0%, transparent 55%),
+        radial-gradient(ellipse 70% 50% at 90% 100%, #062044 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 50% 50%, #071e3d 0%, transparent 70%),
+        linear-gradient(160deg, #020c1b 0%, #041428 40%, #030e1f 100%);
     min-height: 100vh;
 }
+
+/* subtle animated noise overlay */
+.stApp::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+}
+
 #MainMenu, footer, header { visibility: hidden; }
 
+/* ── TYPOGRAPHY ── */
 .main-title {
-    font-family: 'Space Mono', monospace;
-    font-size: 2.2rem; font-weight: 700; color: #ffffff;
-    letter-spacing: -1px; text-align: center; margin-bottom: 0.2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 500;
+    color: var(--accent-3);
+    letter-spacing: -0.5px;
+    text-align: center;
+    margin-bottom: 0.3rem;
+    text-shadow: 0 0 40px rgba(125,211,252,0.4);
 }
 .sub-title {
-    font-size: 0.95rem; color: #a78bfa; text-align: center;
-    margin-bottom: 2rem; font-weight: 400;
+    font-size: 0.85rem;
+    color: var(--text-3);
+    text-align: center;
+    margin-bottom: 2.5rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
 }
+
+/* ── CARD ── */
 .card {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 18px; padding: 2rem;
-    backdrop-filter: blur(12px); margin-bottom: 1.5rem;
+    background: var(--surface-a);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem 2.2rem;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    margin-bottom: 1.4rem;
+    transition: border-color 0.3s;
 }
+.card:hover { border-color: var(--border-h); }
+
+/* ── BADGES ── */
 .badge {
-    display: inline-block; padding: 4px 14px; border-radius: 999px;
-    font-size: 0.75rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 1px;
+    display: inline-block; padding: 3px 12px;
+    border-radius: 999px; font-size: 0.7rem;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px;
 }
-.badge-dosen { background: #7c3aed; color: #fff; }
-.badge-siswa { background: #0ea5e9; color: #fff; }
-.badge-ortu  { background: #16a34a; color: #fff; }
+.badge-dosen { background: rgba(56,189,248,0.15); color: var(--accent-1); border: 1px solid rgba(56,189,248,0.3); }
+.badge-siswa { background: rgba(52,211,153,0.12); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+.badge-ortu  { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
 
+/* ── SECTION HEADER ── */
 .section-header {
-    font-size: 1.1rem; font-weight: 700; color: #e2e8f0;
-    border-left: 4px solid #7c3aed; padding-left: 12px;
-    margin: 1.5rem 0 1rem 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent-1);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-left: 3px solid var(--accent-2);
+    padding-left: 12px;
+    margin: 1.8rem 0 1.2rem 0;
 }
+
+/* ── STAT BOXES ── */
 .stat-box {
-    background: rgba(124,58,237,0.18);
-    border: 1px solid rgba(124,58,237,0.35);
-    border-radius: 14px; padding: 1rem 1.4rem; text-align: center;
+    background: linear-gradient(135deg, rgba(14,165,233,0.08), rgba(56,189,248,0.04));
+    border: 1px solid rgba(56,189,248,0.18);
+    border-radius: 16px;
+    padding: 1.2rem 1rem;
+    text-align: center;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
 }
-.stat-num { font-size: 2rem; font-weight: 800; color: #a78bfa; }
-.stat-lbl { font-size: 0.78rem; color: #94a3b8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; }
+.stat-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 60%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-1), transparent);
+}
+.stat-box:hover {
+    border-color: rgba(56,189,248,0.38);
+    background: linear-gradient(135deg, rgba(14,165,233,0.13), rgba(56,189,248,0.07));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(14,165,233,0.12);
+}
+.stat-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 2.2rem; font-weight: 500;
+    color: var(--accent-3);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+}
+.stat-lbl {
+    font-size: 0.68rem; color: var(--text-3);
+    font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px;
+}
 
-.login-wrap { max-width: 440px; margin: 4rem auto 0; }
+/* ── LOGIN WRAP ── */
+.login-wrap { max-width: 460px; margin: 3rem auto 0; }
 
+/* ── LOGOUT BUTTON ── */
 .logout-btn > button {
-    background: rgba(239,68,68,0.15) !important; color: #f87171 !important;
-    border: 1px solid rgba(239,68,68,0.35) !important;
-    border-radius: 10px !important; font-weight: 600 !important; font-size: 0.85rem !important;
+    background: rgba(248,113,113,0.07) !important;
+    color: var(--danger) !important;
+    border: 1px solid rgba(248,113,113,0.25) !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    font-size: 0.82rem !important;
+    transition: all 0.2s !important;
 }
+.logout-btn > button:hover {
+    background: rgba(248,113,113,0.14) !important;
+    border-color: rgba(248,113,113,0.45) !important;
+}
+
+/* ── FORM INPUTS ── */
 .stTextInput > div > div > input,
 input[type="text"], input[type="password"] {
-    background: rgba(255,255,255,0.08) !important;
-    border: 1px solid rgba(255,255,255,0.18) !important;
-    border-radius: 10px !important; color: #111827 !important;
+    background: rgba(10,30,60,0.6) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 10px !important;
+    color: var(--text-1) !important;
+    font-family: 'DM Sans', sans-serif !important;
+    transition: border-color 0.2s !important;
+}
+.stTextInput > div > div > input:focus {
+    border-color: var(--accent-2) !important;
+    box-shadow: 0 0 0 2px var(--accent-glow) !important;
 }
 .stTextArea > div > div > textarea {
-    background: rgba(255,255,255,0.08) !important;
-    border: 1px solid rgba(255,255,255,0.18) !important;
-    border-radius: 10px !important; color: #f1f5f9 !important;
+    background: rgba(10,30,60,0.6) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 10px !important;
+    color: var(--text-1) !important;
+    font-family: 'DM Sans', sans-serif !important;
+}
+.stTextArea > div > div > textarea:focus {
+    border-color: var(--accent-2) !important;
+    box-shadow: 0 0 0 2px var(--accent-glow) !important;
 }
 .stSelectbox > div > div {
-    background: rgba(255,255,255,0.08) !important;
-    border: 1px solid rgba(255,255,255,0.18) !important;
-    border-radius: 10px !important; color: #f1f5f9 !important;
+    background: rgba(10,30,60,0.6) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 10px !important;
+    color: var(--text-1) !important;
 }
+
+/* ── PRIMARY BUTTON ── */
 .stButton > button[kind="primary"] {
-    background: linear-gradient(135deg, #7c3aed, #4f46e5) !important;
-    border: none !important; border-radius: 12px !important;
-    font-weight: 700 !important; color: #fff !important;
-    padding: 0.6rem 1.8rem !important; font-size: 0.95rem !important;
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important;
+    border: none !important;
+    border-radius: 11px !important;
+    font-weight: 600 !important;
+    color: #fff !important;
+    padding: 0.65rem 1.8rem !important;
+    font-size: 0.92rem !important;
+    letter-spacing: 0.02em !important;
+    transition: all 0.2s !important;
+    box-shadow: 0 4px 20px rgba(14,165,233,0.25) !important;
 }
 .stButton > button[kind="primary"]:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 8px 24px rgba(124,58,237,0.45) !important;
+    box-shadow: 0 8px 28px rgba(14,165,233,0.4) !important;
+    background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%) !important;
 }
+
+/* ── TABS ── */
 .stTabs [data-baseweb="tab-list"] {
-    gap: 6px; background: rgba(255,255,255,0.05) !important;
-    border-radius: 12px; padding: 4px;
+    gap: 4px;
+    background: rgba(10,30,60,0.5) !important;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 4px;
 }
 .stTabs [data-baseweb="tab"] {
-    border-radius: 9px !important; color: #94a3b8 !important;
-    font-weight: 600 !important; font-size: 0.85rem !important;
+    border-radius: 9px !important;
+    color: var(--text-3) !important;
+    font-weight: 600 !important;
+    font-size: 0.82rem !important;
+    letter-spacing: 0.02em !important;
+    transition: all 0.2s !important;
 }
 .stTabs [aria-selected="true"] {
-    background: rgba(124,58,237,0.55) !important; color: #fff !important;
+    background: linear-gradient(135deg, rgba(14,165,233,0.3), rgba(56,189,248,0.2)) !important;
+    color: var(--accent-3) !important;
+    box-shadow: inset 0 0 0 1px rgba(56,189,248,0.3) !important;
 }
+
+/* ── ALERTS ── */
 .stAlert { border-radius: 12px !important; }
+.stSuccess { background: rgba(52,211,153,0.08) !important; border-color: rgba(52,211,153,0.25) !important; }
+.stInfo    { background: rgba(56,189,248,0.08) !important; border-color: rgba(56,189,248,0.25) !important; }
+.stError   { background: rgba(248,113,113,0.08) !important; border-color: rgba(248,113,113,0.25) !important; }
+
+/* ── LABELS ── */
 label, .stSlider label, [data-testid="stWidgetLabel"] {
-    color: #cbd5e1 !important; font-weight: 500 !important;
+    color: var(--text-2) !important;
+    font-weight: 500 !important;
+    font-size: 0.85rem !important;
+}
+
+/* ── SLIDER ── */
+.stSlider [data-baseweb="slider"] [data-testid="stSliderThumb"] {
+    background: var(--accent-1) !important;
+    box-shadow: 0 0 12px var(--accent-glow) !important;
+}
+
+/* ── DATAFRAME ── */
+.stDataFrame {
+    border: 1px solid var(--border) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+}
+
+/* ── RADIO ── */
+[data-testid="stRadio"] label {
+    background: rgba(10,30,60,0.4) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+    padding: 4px 14px !important;
+    transition: all 0.2s !important;
+}
+[data-testid="stRadio"] label:hover {
+    border-color: var(--accent-2) !important;
+    background: rgba(14,165,233,0.1) !important;
+}
+
+/* ── DIVIDER ── */
+hr {
+    border-color: var(--border) !important;
+    margin: 1.2rem 0 !important;
+}
+
+/* ── CAPTION ── */
+.stCaption, [data-testid="stCaptionContainer"] {
+    color: var(--text-3) !important;
+    font-size: 0.75rem !important;
+}
+
+/* ── TOP BAR INFO ── */
+.topbar-info {
+    color: var(--text-1);
+    font-weight: 500;
+    font-size: 0.92rem;
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ── DEMO TABLE ── */
+.stDataFrame [data-testid="StyledDataFrameDataCell"] {
+    color: var(--text-1) !important;
+    font-size: 0.82rem !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -136,10 +345,6 @@ except Exception:
 # FUNGSI DATABASE — USERS
 # ─────────────────────────────────────────────
 def authenticate(username: str, password: str) -> dict | None:
-    """
-    Login untuk dosen & siswa: cocokkan username + tanggal_lahir.
-    Password diformat DDMMYYYY, contoh: 15081995
-    """
     resp = (
         supabase.table("users")
         .select("*")
@@ -152,10 +357,6 @@ def authenticate(username: str, password: str) -> dict | None:
     return resp.data[0] if resp.data else None
 
 def authenticate_ortu(username_anak: str, tanggal_lahir_anak: str) -> dict | None:
-    """
-    Login orang tua: masukkan username anak + tanggal lahir anak.
-    Jika cocok, kembalikan data siswa tersebut dengan flag is_ortu=True.
-    """
     resp = (
         supabase.table("users")
         .select("*")
@@ -167,7 +368,7 @@ def authenticate_ortu(username_anak: str, tanggal_lahir_anak: str) -> dict | Non
     )
     if resp.data:
         siswa = resp.data[0]
-        siswa["_mode"] = "ortu"   # tandai sebagai sesi pantau orang tua
+        siswa["_mode"] = "ortu"
         return siswa
     return None
 
@@ -227,13 +428,13 @@ def render_charts(df: pd.DataFrame):
     df = df.sort_values("tanggal").set_index("tanggal")
 
     st.markdown("**😊 Mood per Hari**")
-    st.line_chart(df[["mood"]], color=["#623bd7"])
+    st.line_chart(df[["mood"]], color=["#38bdf8"])
 
     st.markdown("**⚡ Energi per Hari**")
     st.line_chart(df[["energi"]], color=["#34d399"])
 
     st.markdown("**💓 Perasaan per Hari**")
-    st.line_chart(df[["perasaan"]], color=["#f472b6"])
+    st.line_chart(df[["perasaan"]], color=["#fb7185"])
 
 def stat_boxes(nums: list, lbls: list):
     cols = st.columns(len(nums))
@@ -258,8 +459,11 @@ if "user" not in st.session_state:
 # ─────────────────────────────────────────────
 # HEADER
 # ─────────────────────────────────────────────
-st.markdown('<div class="main-title">📋 Sistem Daily Check-In Siswa</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-title">Pantau kondisi harian siswa dengan mudah & terstruktur · Powered by Supabase</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">◈ Daily Check-In Siswa</div>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="sub-title">Pantau kondisi harian siswa dengan mudah & terstruktur &nbsp;·&nbsp; Powered by Supabase</div>',
+    unsafe_allow_html=True
+)
 
 # ═══════════════════════════════════════════════
 # HALAMAN LOGIN
@@ -301,7 +505,7 @@ if not st.session_state.logged_in:
                 else:
                     st.error("❌ Username atau tanggal lahir salah.")
 
-    else:  # Orang Tua
+    else:
         with st.form("login_ortu_form"):
             st.caption("Masukkan username dan tanggal lahir **anak** Anda.")
             username_anak = st.text_input("👤 Username Anak", placeholder="Contoh: Andi")
@@ -330,9 +534,9 @@ if not st.session_state.logged_in:
 
     with st.expander("💡 Panduan Akun Demo"):
         demo = {
-            "Role":             ["Dosen", "Siswa", "Siswa", "Orang Tua (login pakai data anak)"],
-            "Username":         ["Bu Rina", "Andi", "Budi", "→ pakai username: Andi"],
-            "Tanggal Lahir":    ["123", "111", "222", "→ pakai tgl lahir: 111"],
+            "Role":          ["Dosen", "Siswa", "Siswa", "Orang Tua (login pakai data anak)"],
+            "Username":      ["Bu Rina", "Andi", "Budi", "→ pakai username: Andi"],
+            "Tanggal Lahir": ["123", "111", "222", "→ pakai tgl lahir: 111"],
         }
         st.dataframe(pd.DataFrame(demo), use_container_width=True, hide_index=True)
 
@@ -357,7 +561,7 @@ else:
             label = f'👋 Halo, <strong>{user["nama"]}</strong> &nbsp;<span class="badge {badge_cls}">{badge_lbl}</span>'
 
         st.markdown(
-            f'<div style="color:#e2e8f0;font-weight:600;font-size:1rem;padding:8px 0">{label}</div>',
+            f'<div class="topbar-info">{label}</div>',
             unsafe_allow_html=True
         )
     with col_logout:
@@ -371,7 +575,7 @@ else:
     st.markdown("---")
 
     # ══════════════════════════════════════
-    # MODE ORANG TUA (lihat data anak saja)
+    # MODE ORANG TUA
     # ══════════════════════════════════════
     if is_ortu_mode:
         st.markdown(
