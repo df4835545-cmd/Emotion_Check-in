@@ -345,12 +345,25 @@ except Exception:
 # FUNGSI DATABASE — USERS
 # ─────────────────────────────────────────────
 def authenticate(username: str, password: str) -> dict | None:
+    # Guru: pakai kolom 'password'
+    resp = (
+        supabase.table("users")
+        .select("*")
+        .ilike("username", username.strip())
+        .eq("password", password.strip())
+        .eq("role", "guru")
+        .limit(1)
+        .execute()
+    )
+    if resp.data:
+        return resp.data[0]
+    # Siswa: pakai kolom 'tanggal_lahir'
     resp = (
         supabase.table("users")
         .select("*")
         .ilike("username", username.strip())
         .eq("tanggal_lahir", password.strip())
-        .in_("role", ["dosen", "siswa"])
+        .eq("role", "siswa")
         .limit(1)
         .execute()
     )
@@ -509,7 +522,7 @@ if not st.session_state.logged_in:
         label_visibility="visible"
     )
 
-    if login_mode == "👨‍🏫 Dosen / Siswa":
+    if login_mode == "👨‍🏫 Guru / Siswa":
         with st.form("login_form"):
             username = st.text_input("👤 Username (Nama)", placeholder="Contoh: Andi")
             password = st.text_input(
@@ -584,8 +597,8 @@ else:
         if is_ortu_mode:
             label = f'👨‍👩‍👦 Mode Orang Tua — memantau <strong>{user["nama"]}</strong> &nbsp;<span class="badge badge-ortu">Orang Tua</span>'
         else:
-            badge_cls = "badge-guru" if role == "dosen" else "badge-siswa"
-            badge_lbl = "Guru" if role == "dosen" else "Siswa"
+            badge_cls = "badge-guru" if role == "guru" else "badge-siswa"
+            badge_lbl = "Guru" if role == "guru" else "Siswa"
             label = f'👋 Halo, <strong>{user["nama"]}</strong> &nbsp;<span class="badge {badge_cls}">{badge_lbl}</span>'
 
         st.markdown(
@@ -636,7 +649,7 @@ else:
     # ══════════════════════════
     # ROLE: GURU (dosen)
     # ══════════════════════════
-    elif role == "dosen":
+    elif role == "guru":
         st.markdown('<div class="section-header">📊 Dashboard Guru — Semua Data Siswa</div>', unsafe_allow_html=True)
 
         with st.spinner("Memuat data..."):
