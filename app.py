@@ -377,9 +377,6 @@ def get_all_siswa() -> list[dict]:
     resp = supabase.table("users").select("*").eq("role", "siswa").execute()
     return resp.data or []
 
-def get_user_by_nim(nim: str) -> dict | None:
-    resp = supabase.table("users").select("*").eq("nim", nim).limit(1).execute()
-    return resp.data[0] if resp.data else None
 
 # ─────────────────────────────────────────────
 # FUNGSI DATABASE — CHECK-IN
@@ -388,21 +385,21 @@ def get_all_checkin() -> pd.DataFrame:
     resp = supabase.table("checkin").select("*").order("tanggal", desc=False).execute()
     return pd.DataFrame(resp.data) if resp.data else pd.DataFrame()
 
-def get_checkin_by_nim(nim: str) -> pd.DataFrame:
+def get_checkin_by_nama(nama: str) -> pd.DataFrame:
     resp = (
         supabase.table("checkin")
         .select("*")
-        .eq("nim", nim)
+        .eq("nama", nama)
         .order("tanggal", desc=False)
         .execute()
     )
     return pd.DataFrame(resp.data) if resp.data else pd.DataFrame()
 
-def already_checkin_today(nim: str) -> bool:
+def already_checkin_today(nama: str) -> bool:
     resp = (
         supabase.table("checkin")
         .select("id")
-        .eq("nim", nim)
+        .eq("nama", nama)
         .eq("tanggal", str(date.today()))
         .limit(1)
         .execute()
@@ -505,12 +502,12 @@ if not st.session_state.logged_in:
 
     login_mode = st.radio(
         "Masuk sebagai:",
-        ["👨‍🏫 Guru / Siswa", "👨‍👩‍👦 Orang Tua"],
+        ["👨‍🏫 Dosen / Siswa", "👨‍👩‍👦 Orang Tua"],
         horizontal=True,
         label_visibility="visible"
     )
 
-    if login_mode == "👨‍🏫 Guru / Siswa":
+    if login_mode == "👨‍🏫 Dosen / Siswa":
         with st.form("login_form"):
             username = st.text_input("👤 Username (Nama)", placeholder="Contoh: Andi")
             password = st.text_input(
@@ -614,7 +611,7 @@ else:
         st.info("ℹ️ Anda masuk sebagai orang tua. Hanya bisa memantau data anak, tidak bisa mengisi check-in.")
 
         with st.spinner("Memuat data anak..."):
-            df_anak = get_checkin_by_nim(user["nim"])
+            df_anak = get_checkin_by_nama(user["nama"])
 
         avg_mood   = round(df_anak["mood"].mean(), 1)   if not df_anak.empty else "-"
         avg_energi = round(df_anak["energi"].mean(), 1) if not df_anak.empty else "-"
@@ -783,7 +780,7 @@ else:
         st.markdown('<div class="section-header">🎒 Dashboard Siswa — Data Pribadi</div>', unsafe_allow_html=True)
 
         with st.spinner("Memuat data..."):
-            df_mine = get_checkin_by_nim(user["nim"])
+            df_mine = get_checkin_by_nama(user["nama"])
 
         avg_mood   = round(df_mine["mood"].mean(), 1)   if not df_mine.empty else "-"
         avg_energi = round(df_mine["energi"].mean(), 1) if not df_mine.empty else "-"
@@ -798,7 +795,7 @@ else:
             st.markdown('<div class="section-header">📝 Form Daily Check-In</div>', unsafe_allow_html=True)
             today = date.today()
 
-            if already_checkin_today(user["nim"]):
+            if already_checkin_today(user["nama"]):
                 st.success("✅ Kamu sudah melakukan check-in hari ini! Sampai jumpa besok 😊")
             else:
                 with st.form("checkin_form"):
@@ -808,7 +805,6 @@ else:
                         st.text_input("👤 Nama",    value=user["nama"], disabled=True)
                     with col_b:
                         st.text_input("🏫 Kelas",   value=user["kelas"], disabled=True)
-                        st.text_input("🪪 NIM",     value=user["nim"], disabled=True)
 
                     st.markdown("---")
                     mood     = st.slider("😊 Mood hari ini",     1, 5, 3, help="1=Sangat buruk · 5=Sangat baik")
@@ -823,7 +819,6 @@ else:
                     else:
                         ok = insert_checkin({
                             "tanggal":  str(today),
-                            "nim":      user["nim"],
                             "nama":     user["nama"],
                             "kelas":    user["kelas"],
                             "mood":     mood,
