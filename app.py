@@ -660,8 +660,32 @@ else:
         )
 
     with col_logout:
-        # Tombol logout pakai st.button type=primary, lalu CSS override via global style
-        if st.button("🚪 Logout", key="logout_btn", use_container_width=True, type="primary"):
+        logout_clicked = st.button("🚪 Logout", key="logout_btn", use_container_width=True, type="primary")
+        # Inject CSS via JavaScript setelah DOM ready - cara paling reliable
+        st.components.v1.html(
+            """
+            <script>
+            function styleLogout() {
+                // Cari semua primary button di parent document
+                const buttons = window.parent.document.querySelectorAll('[data-testid="stBaseButton-primary"], button[kind="primary"]');
+                buttons.forEach(btn => {
+                    const txt = btn.innerText || btn.textContent || "";
+                    if (txt.includes("Logout")) {
+                        btn.style.setProperty("background", "linear-gradient(135deg,#ef4444,#dc2626)", "important");
+                        btn.style.setProperty("background-color", "#ef4444", "important");
+                        btn.style.setProperty("box-shadow", "0 4px 20px rgba(239,68,68,0.4)", "important");
+                        btn.style.setProperty("border", "none", "important");
+                    }
+                });
+            }
+            // Run sekarang dan setiap 500ms (karena Streamlit re-render)
+            styleLogout();
+            setInterval(styleLogout, 500);
+            </script>
+            """,
+            height=0,
+        )
+        if logout_clicked:
             st.session_state.logged_in = False
             st.session_state.user = None
             st.rerun()
