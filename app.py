@@ -179,16 +179,12 @@ html, body, [class*="css"] {
 .login-wrap { max-width: 460px; margin: 3rem auto 0; }
 
 /* ── LOGOUT BUTTON ── */
-/* key="logout_btn" → Streamlit render sebagai id unik di DOM */
-button[data-testid="stBaseButton-primary"][kind="primary"]:nth-of-type(1) { }
-/* Semua primary button yang BUKAN di dalam form → merah */
 :not(form) > div > div > div > div [data-testid="stBaseButton-primary"],
 :not(form) > div > div > div > div [data-testid="stBaseButton-primary"]:focus {
     background: linear-gradient(135deg,#ef4444,#dc2626) !important;
     background-color: #ef4444 !important;
     box-shadow: 0 4px 20px rgba(239,68,68,0.4) !important;
 }
-/* Primary button di dalam form → tetap biru */
 form [data-testid="stBaseButton-primary"],
 [data-testid="stForm"] [data-testid="stBaseButton-primary"],
 [data-testid="stFormSubmitButton"] [data-testid="stBaseButton-primary"] {
@@ -295,10 +291,42 @@ label, .stSlider label, [data-testid="stWidgetLabel"],
     font-size: 0.88rem !important;
 }
 
-/* ── SLIDER ── */
-.stSlider [data-baseweb="slider"] [data-testid="stSliderThumb"] {
-    background: var(--accent-1) !important;
-    box-shadow: 0 0 12px var(--accent-glow) !important;
+/* ── EMOJI RADIO — besar & jelas ── */
+[data-testid="stRadio"] > div {
+    gap: 8px !important;
+}
+[data-testid="stRadio"] label {
+    background: rgba(10,30,60,0.5) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 12px !important;
+    padding: 8px 16px !important;
+    transition: all 0.2s !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 64px !important;
+    cursor: pointer !important;
+}
+[data-testid="stRadio"] label:hover {
+    border-color: var(--accent-2) !important;
+    background: rgba(14,165,233,0.12) !important;
+    transform: translateY(-2px) !important;
+}
+/* Sembunyikan radio button asli, biarkan label terlihat */
+[data-testid="stRadio"] [data-baseweb="radio"] > div:first-child {
+    display: none !important;
+}
+[data-testid="stRadio"] label > div {
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+}
+[data-testid="stRadio"] label > div + div,
+[data-testid="stRadio"] label span {
+    font-size: 0.7rem !important;
+    color: var(--text-3) !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
 }
 
 /* ── DATAFRAME ── */
@@ -306,19 +334,6 @@ label, .stSlider label, [data-testid="stWidgetLabel"],
     border: 1px solid var(--border) !important;
     border-radius: 12px !important;
     overflow: hidden !important;
-}
-
-/* ── RADIO ── */
-[data-testid="stRadio"] label {
-    background: rgba(10,30,60,0.4) !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 8px !important;
-    padding: 4px 14px !important;
-    transition: all 0.2s !important;
-}
-[data-testid="stRadio"] label:hover {
-    border-color: var(--accent-2) !important;
-    background: rgba(14,165,233,0.1) !important;
 }
 
 /* ── DIVIDER ── */
@@ -394,8 +409,11 @@ details > summary { color: #cce8f4 !important; }
     .stat-lbl { font-size: 0.65rem !important; }
     .section-header { font-size: 0.75rem !important; }
     [data-testid="stRadio"] label {
-        padding: 6px 16px !important;
-        font-size: 0.88rem !important;
+        padding: 6px 10px !important;
+        min-width: 52px !important;
+    }
+    [data-testid="stRadio"] label > div {
+        font-size: 1.4rem !important;
     }
     .stTextInput > div > div > input {
         font-size: 1rem !important;
@@ -551,6 +569,33 @@ def stat_boxes(nums: list, lbls: list):
             )
 
 # ─────────────────────────────────────────────
+# PILIHAN EMOJI UNTUK CHECK-IN
+# ─────────────────────────────────────────────
+MOOD_OPTS = {
+    "😣\nSangat Buruk": 1,
+    "😕\nKurang":       2,
+    "😐\nBiasa":        3,
+    "🙂\nBaik":         4,
+    "😄\nSangat Baik":  5,
+}
+
+PERASAAN_OPTS = {
+    "😢\nSangat Sedih":   1,
+    "😟\nSedih":          2,
+    "😐\nNetral":         3,
+    "😊\nSenang":         4,
+    "🥰\nSangat Senang":  5,
+}
+
+ENERGI_OPTS = {
+    "😴\nSangat Lelah":    1,
+    "🥱\nLelah":           2,
+    "😐\nCukup":           3,
+    "⚡\nBerenergi":       4,
+    "🚀\nSangat Berenergi":5,
+}
+
+# ─────────────────────────────────────────────
 # SESSION STATE INIT
 # ─────────────────────────────────────────────
 if "logged_in" not in st.session_state:
@@ -669,12 +714,10 @@ else:
 
     with col_logout:
         logout_clicked = st.button("🚪 Logout", key="logout_btn", use_container_width=True, type="primary")
-        # Inject CSS via JavaScript setelah DOM ready - cara paling reliable
         st.components.v1.html(
             """
             <script>
             function styleLogout() {
-                // Cari semua primary button di parent document
                 const buttons = window.parent.document.querySelectorAll('[data-testid="stBaseButton-primary"], button[kind="primary"]');
                 buttons.forEach(btn => {
                     const txt = btn.innerText || btn.textContent || "";
@@ -686,7 +729,6 @@ else:
                     }
                 });
             }
-            // Run sekarang dan setiap 500ms (karena Streamlit re-render)
             styleLogout();
             setInterval(styleLogout, 500);
             </script>
@@ -904,11 +946,48 @@ else:
                         st.text_input("🏫 Kelas",   value=user["kelas"], disabled=True)
 
                     st.markdown("---")
-                    mood     = st.slider("😊 Mood hari ini",     1, 5, 3, help="1=Sangat buruk · 5=Sangat baik")
-                    perasaan = st.slider("💓 Perasaan hari ini", 1, 5, 3, help="1=Sangat sedih · 5=Sangat bahagia")
-                    energi   = st.slider("⚡ Energi hari ini",   1, 5, 3, help="1=Sangat lelah · 5=Sangat berenergi")
-                    cerita   = st.text_area("📖 Cerita hari ini", placeholder="Ceritakan bagaimana harimu...", height=120)
-                    submit   = st.form_submit_button("✅ Kirim Check-In", type="primary", use_container_width=True)
+
+                    # ── MOOD ──
+                    mood_label = st.radio(
+                        "😊 Mood hari ini",
+                        options=list(MOOD_OPTS.keys()),
+                        index=2,
+                        horizontal=True,
+                        help="Bagaimana mood kamu hari ini?"
+                    )
+                    mood = MOOD_OPTS[mood_label]
+
+                    # ── PERASAAN ──
+                    perasaan_label = st.radio(
+                        "💓 Perasaan hari ini",
+                        options=list(PERASAAN_OPTS.keys()),
+                        index=2,
+                        horizontal=True,
+                        help="Bagaimana perasaan kamu hari ini?"
+                    )
+                    perasaan = PERASAAN_OPTS[perasaan_label]
+
+                    # ── ENERGI ──
+                    energi_label = st.radio(
+                        "⚡ Energi hari ini",
+                        options=list(ENERGI_OPTS.keys()),
+                        index=2,
+                        horizontal=True,
+                        help="Bagaimana level energi kamu hari ini?"
+                    )
+                    energi = ENERGI_OPTS[energi_label]
+
+                    st.markdown("")
+                    cerita = st.text_area(
+                        "📖 Cerita hari ini",
+                        placeholder="Ceritakan bagaimana harimu...",
+                        height=120
+                    )
+                    submit = st.form_submit_button(
+                        "✅ Kirim Check-In",
+                        type="primary",
+                        use_container_width=True
+                    )
 
                 if submit:
                     if not cerita.strip():
