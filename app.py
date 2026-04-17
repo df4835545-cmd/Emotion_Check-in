@@ -291,6 +291,616 @@ label, .stSlider label, [data-testid="stWidgetLabel"],
     font-size: 0.88rem !important;
 }
 
+/* ══════════════════════════════════════════
+   EMOJI RADIO BUTTONS
+══════════════════════════════════════════ */
+[data-testid="stRadio"] > div {
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+}
+
+/* Base card */
+[data-testid="stRadio"] label {
+    background: rgba(10,30,60,0.5) !important;
+    border: 1.5px solid var(--border) !important;
+    border-radius: 14px !important;
+    padding: 10px 16px !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 68px !important;
+    cursor: pointer !important;
+    position: relative !important;
+}
+
+/* Hover state */
+[data-testid="stRadio"] label:hover {
+    border-color: rgba(56,189,248,0.45) !important;
+    background: rgba(14,165,233,0.10) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* ── SELECTED STATE — indikator jelas ── */
+[data-testid="stRadio"] label:has(input:checked) {
+    background: linear-gradient(135deg, rgba(56,189,248,0.28), rgba(14,165,233,0.16)) !important;
+    border-color: var(--accent-1) !important;
+    box-shadow:
+        0 0 0 2px rgba(56,189,248,0.40),
+        0 6px 24px rgba(14,165,233,0.25) !important;
+    transform: translateY(-4px) scale(1.10) !important;
+}
+
+/* Checkmark indicator di pojok kanan atas */
+[data-testid="stRadio"] label:has(input:checked)::after {
+    content: '✓';
+    position: absolute !important;
+    top: 4px !important;
+    right: 7px !important;
+    font-size: 0.65rem !important;
+    font-weight: 800 !important;
+    color: var(--accent-1) !important;
+    line-height: 1 !important;
+}
+
+/* Label teks saat terpilih jadi biru terang */
+[data-testid="stRadio"] label:has(input:checked) span {
+    color: var(--accent-3) !important;
+}
+
+/* Sembunyikan radio button asli (lingkaran) */
+[data-testid="stRadio"] [data-baseweb="radio"] > div:first-child {
+    display: none !important;
+}
+
+/* Emoji besar */
+[data-testid="stRadio"] label > div {
+    font-size: 1.9rem !important;
+    line-height: 1.2 !important;
+}
+
+/* Teks kecil di bawah emoji */
+[data-testid="stRadio"] label > div + div,
+[data-testid="stRadio"] label span {
+    font-size: 0.68rem !important;
+    color: var(--text-3) !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.4px !important;
+    margin-top: 2px !important;
+}
+
+/* ── DATAFRAME ── */
+.stDataFrame {
+    border: 1px solid var(--border) !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+}
+
+/* ── DIVIDER ── */
+hr {
+    border-color: var(--border) !important;
+    margin: 1.2rem 0 !important;
+}
+
+/* ── CAPTION ── */
+.stCaption, [data-testid="stCaptionContainer"] {
+    color: var(--text-3) !important;
+    font-size: 0.75rem !important;
+}
+
+/* ── TOP BAR INFO ── */
+.topbar-info {
+    color: var(--text-1);
+    font-weight: 500;
+    font-size: 0.92rem;
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ── FORCE READABLE TEXT ── */
+h1, h2, h3, h4, h5, h6,
+.stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {
+    color: #e0f2fe !important;
+}
+.stMarkdown p, .stMarkdown span, .stMarkdown li,
+[data-testid="stMarkdownContainer"] p {
+    color: #cce8f4 !important;
+}
+[data-testid="stRadio"] label,
+[data-testid="stRadio"] label span,
+[data-testid="stRadio"] div {
+    color: #cce8f4 !important;
+    font-weight: 600 !important;
+}
+[data-testid="stExpander"] summary,
+[data-testid="stExpander"] summary p,
+[data-testid="stExpander"] summary span,
+details summary p {
+    color: #cce8f4 !important;
+    font-weight: 600 !important;
+}
+details > summary { color: #cce8f4 !important; }
+[data-testid="stRadio"] > label,
+[data-testid="stRadio"] > div > label {
+    color: #cce8f4 !important;
+}
+.stSelectbox label, .stTextInput label,
+.stTextArea label, .stSlider label {
+    color: #a8d8f0 !important;
+    font-weight: 600 !important;
+}
+.streamlit-expanderHeader, .streamlit-expanderHeader p {
+    color: #cce8f4 !important;
+}
+.stDataFrame [data-testid="StyledDataFrameDataCell"] {
+    color: var(--text-1) !important;
+    font-size: 0.82rem !important;
+}
+
+/* ── MOBILE RESPONSIVE ── */
+@media (max-width: 768px) {
+    .main-title { font-size: 1.5rem !important; }
+    .sub-title { font-size: 0.78rem !important; }
+    .login-wrap { margin: 1rem auto 0 !important; padding: 0 0.5rem; }
+    .card { padding: 1.4rem 1.2rem !important; border-radius: 16px !important; }
+    .stat-num { font-size: 1.7rem !important; }
+    .stat-lbl { font-size: 0.65rem !important; }
+    .section-header { font-size: 0.75rem !important; }
+    [data-testid="stRadio"] label {
+        padding: 8px 10px !important;
+        min-width: 56px !important;
+    }
+    [data-testid="stRadio"] label > div {
+        font-size: 1.5rem !important;
+    }
+    .stTextInput > div > div > input {
+        font-size: 1rem !important;
+        padding: 0.7rem 1rem !important;
+    }
+    .topbar-info { font-size: 0.82rem !important; }
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ─────────────────────────────────────────────
+# KONEKSI SUPABASE
+# ─────────────────────────────────────────────
+@st.cache_resource
+def get_supabase() -> Client:
+    SUPABASE_URL = st.secrets["SUPABASE_URL"]
+    SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+    return create_client(SUPABASE_URL, SUPABASE_KEY)
+
+try:
+    supabase = get_supabase()
+except Exception:
+    st.error("⚠️ Koneksi Supabase gagal!")
+    st.stop()
+
+# ─────────────────────────────────────────────
+# FUNGSI DATABASE — USERS
+# ─────────────────────────────────────────────
+def authenticate(username: str, password: str) -> dict | None:
+    resp = (
+        supabase.table("users")
+        .select("*")
+        .ilike("username", username.strip())
+        .eq("tanggal_lahir", password.strip())
+        .in_("role", ["guru", "siswa"])
+        .limit(1)
+        .execute()
+    )
+    return resp.data[0] if resp.data else None
+
+def authenticate_ortu(username_anak: str, tanggal_lahir_anak: str) -> dict | None:
+    resp = (
+        supabase.table("users")
+        .select("*")
+        .ilike("username", username_anak.strip())
+        .eq("tanggal_lahir", tanggal_lahir_anak.strip())
+        .eq("role", "siswa")
+        .limit(1)
+        .execute()
+    )
+    if resp.data:
+        siswa = resp.data[0]
+        siswa["_mode"] = "ortu"
+        return siswa
+    return None
+
+def get_all_siswa() -> list[dict]:
+    resp = supabase.table("users").select("*").eq("role", "siswa").execute()
+    return resp.data or []
+
+# ─────────────────────────────────────────────
+# FUNGSI DATABASE — CHECK-IN
+# ─────────────────────────────────────────────
+def get_all_checkin() -> pd.DataFrame:
+    resp = supabase.table("checkin").select("*").order("tanggal", desc=False).execute()
+    return pd.DataFrame(resp.data) if resp.data else pd.DataFrame()
+
+def get_checkin_by_nama(nama: str) -> pd.DataFrame:
+    resp = (
+        supabase.table("checkin")
+        .select("*")
+        .eq("nama", nama)
+        .order("tanggal", desc=False)
+        .execute()
+    )
+    return pd.DataFrame(resp.data) if resp.data else pd.DataFrame()
+
+def already_checkin_today(nama: str) -> bool:
+    resp = (
+        supabase.table("checkin")
+        .select("id")
+        .eq("nama", nama)
+        .eq("tanggal", str(today_wib()))
+        .limit(1)
+        .execute()
+    )
+    return bool(resp.data)
+
+def insert_checkin(row: dict) -> bool:
+    try:
+        supabase.table("checkin").insert(row).execute()
+        return True
+    except Exception as e:
+        st.error(f"❌ Gagal menyimpan data: {e}")
+        return False
+
+def delete_checkin_by_month(year: int, month: int) -> tuple[bool, int]:
+    try:
+        start = f"{year:04d}-{month:02d}-01"
+        if month == 12:
+            end = f"{year+1:04d}-01-01"
+        else:
+            end = f"{year:04d}-{month+1:02d}-01"
+
+        count_resp = (
+            supabase.table("checkin")
+            .select("id", count="exact")
+            .gte("tanggal", start)
+            .lt("tanggal", end)
+            .execute()
+        )
+        jumlah = count_resp.count or 0
+
+        if jumlah == 0:
+            return True, 0
+
+        supabase.table("checkin").delete().gte("tanggal", start).lt("tanggal", end).execute()
+        return True, jumlah
+    except Exception as e:
+        st.error(f"❌ Gagal menghapus data: {e}")
+        return False, 0
+
+# ─────────────────────────────────────────────
+# HELPER CHART & STATS
+# ─────────────────────────────────────────────
+def render_charts(df: pd.DataFrame):
+    if df.empty:
+        st.info("📭 Belum ada data untuk ditampilkan.")
+        return
+    df = df.copy()
+    df["tanggal"] = pd.to_datetime(df["tanggal"])
+    df = df.sort_values("tanggal").set_index("tanggal")
+
+    st.markdown("**😊 Mood per Hari**")
+    st.line_chart(df[["mood"]], color=["#38bdf8"])
+
+    st.markdown("**⚡ Energi per Hari**")
+    st.line_chart(df[["energi"]], color=["#34d399"])
+
+    st.markdown("**💓 Perasaan per Hari**")
+    st.line_chart(df[["perasaan"]], color=["#fb7185"])
+
+def stat_boxes(nums: list, lbls: list):
+    cols = st.columns(len(nums))
+    for col, num, lbl in zip(cols, nums, lbls):
+        with col:
+            st.markdown(
+                f'<div class="stat-box">'
+                f'<div class="stat-num">{num}</div>'
+                f'<div class="stat-lbl">{lbl}</div>'
+                f'</div>',
+                unsafe_allow_html=True
+            )
+
+# ─────────────────────────────────────────────
+# PILIHAN EMOJI UNTUK CHECK-IN
+# ─────────────────────────────────────────────
+MOOD_OPTS = {
+    "😣\nSangat Buruk": 1,
+    "😕\nKurang":       2,
+    "😐\nBiasa":        3,
+    "🙂\nBaik":         4,
+    "😄\nSangat Baik":  5,
+}
+
+PERASAAN_OPTS = {
+    "😢\nSangat Sedih":  1,
+    "😟\nSedih":         2,
+    "😐\nNetral":        3,
+    "😊\nSenang":        4,
+    "🥰\nSangat Senang": 5,
+}
+
+ENERGI_OPTS = {
+    "😴\nSangat Lelah":     1,
+    "🥱\nLelah":            2,
+    "😐\nCukup":            3,
+    "⚡\nBerenergi":        4,
+    "🚀\nSangat Berenergi": 5,
+}
+
+# ─────────────────────────────────────────────
+# SESSION STATE INIT
+# ─────────────────────────────────────────────
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+if "user" not in st.session_state:
+    st.session_state.user = None
+
+# ───────────────    --ocean-900: #020c1b;
+    --ocean-800: #050f20;
+    --ocean-700: #071628;
+    --ocean-600: #0a1f3a;
+    --ocean-500: #0d2d52;
+    --ocean-400: #114075;
+    --surface-a: rgba(255,255,255,0.04);
+    --surface-b: rgba(255,255,255,0.07);
+    --surface-c: rgba(255,255,255,0.10);
+    --border:    rgba(100,180,255,0.12);
+    --border-h:  rgba(100,180,255,0.28);
+    --accent-1:  #38bdf8;
+    --accent-2:  #0ea5e9;
+    --accent-3:  #7dd3fc;
+    --accent-glow: rgba(56,189,248,0.22);
+    --text-1: #e0f2fe;
+    --text-2: #7ec8e3;
+    --text-3: #4a90a4;
+    --danger: #f87171;
+    --success: #34d399;
+    --warning: #fbbf24;
+}
+
+html, body, [class*="css"] {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+}
+
+/* ── BACKGROUND ── */
+.stApp {
+    background:
+        radial-gradient(ellipse 90% 60% at 10% 0%, #0a2a5e 0%, transparent 55%),
+        radial-gradient(ellipse 70% 50% at 90% 100%, #062044 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 50% 50%, #071e3d 0%, transparent 70%),
+        linear-gradient(160deg, #020c1b 0%, #041428 40%, #030e1f 100%);
+    min-height: 100vh;
+}
+
+.stApp::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+}
+
+#MainMenu, footer, header { visibility: hidden; }
+
+/* ── TYPOGRAPHY ── */
+.main-title {
+    font-family: 'DM Mono', monospace;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 500;
+    color: var(--accent-3);
+    letter-spacing: -0.5px;
+    text-align: center;
+    margin-bottom: 0.3rem;
+    text-shadow: 0 0 40px rgba(125,211,252,0.4);
+}
+.sub-title {
+    font-size: 0.85rem;
+    color: var(--text-3);
+    text-align: center;
+    margin-bottom: 2.5rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+}
+
+/* ── CARD ── */
+.card {
+    background: var(--surface-a);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem 2.2rem;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    margin-bottom: 1.4rem;
+    transition: border-color 0.3s;
+}
+.card:hover { border-color: var(--border-h); }
+
+/* ── BADGES ── */
+.badge {
+    display: inline-block; padding: 3px 12px;
+    border-radius: 999px; font-size: 0.7rem;
+    font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px;
+}
+.badge-guru  { background: rgba(56,189,248,0.15); color: var(--accent-1); border: 1px solid rgba(56,189,248,0.3); }
+.badge-siswa { background: rgba(52,211,153,0.12); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+.badge-ortu  { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+
+/* ── SECTION HEADER ── */
+.section-header {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent-1);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-left: 3px solid var(--accent-2);
+    padding-left: 12px;
+    margin: 1.8rem 0 1.2rem 0;
+}
+
+/* ── STAT BOXES ── */
+.stat-box {
+    background: linear-gradient(135deg, rgba(14,165,233,0.08), rgba(56,189,248,0.04));
+    border: 1px solid rgba(56,189,248,0.18);
+    border-radius: 16px;
+    padding: 1.2rem 1rem;
+    text-align: center;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+.stat-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 60%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent-1), transparent);
+}
+.stat-box:hover {
+    border-color: rgba(56,189,248,0.38);
+    background: linear-gradient(135deg, rgba(14,165,233,0.13), rgba(56,189,248,0.07));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(14,165,233,0.12);
+}
+.stat-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 2.2rem; font-weight: 500;
+    color: var(--accent-3);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+}
+.stat-lbl {
+    font-size: 0.68rem; color: var(--text-3);
+    font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px;
+}
+
+/* ── LOGIN WRAP ── */
+.login-wrap { max-width: 460px; margin: 3rem auto 0; }
+
+/* ── LOGOUT BUTTON ── */
+:not(form) > div > div > div > div [data-testid="stBaseButton-primary"],
+:not(form) > div > div > div > div [data-testid="stBaseButton-primary"]:focus {
+    background: linear-gradient(135deg,#ef4444,#dc2626) !important;
+    background-color: #ef4444 !important;
+    box-shadow: 0 4px 20px rgba(239,68,68,0.4) !important;
+}
+form [data-testid="stBaseButton-primary"],
+[data-testid="stForm"] [data-testid="stBaseButton-primary"],
+[data-testid="stFormSubmitButton"] [data-testid="stBaseButton-primary"] {
+    background: linear-gradient(135deg,#0ea5e9,#0284c7) !important;
+    background-color: #0ea5e9 !important;
+    box-shadow: 0 4px 20px rgba(14,165,233,0.3) !important;
+}
+
+/* ── FORM INPUTS ── */
+.stTextInput > div > div > input,
+input[type="text"], input[type="password"] {
+    background: rgba(5,20,45,0.85) !important;
+    border: 1px solid rgba(100,180,255,0.25) !important;
+    border-radius: 10px !important;
+    color: #e8f4ff !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 0.95rem !important;
+    transition: border-color 0.2s !important;
+}
+.stTextInput > div > div > input:focus {
+    border-color: var(--accent-2) !important;
+    box-shadow: 0 0 0 2px var(--accent-glow) !important;
+}
+.stTextArea > div > div > textarea {
+    background: rgba(10,30,60,0.6) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 10px !important;
+    color: var(--text-1) !important;
+    font-family: 'DM Sans', sans-serif !important;
+}
+.stTextArea > div > div > textarea:focus {
+    border-color: var(--accent-2) !important;
+    box-shadow: 0 0 0 2px var(--accent-glow) !important;
+}
+.stSelectbox > div > div {
+    background: rgba(10,30,60,0.6) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 10px !important;
+    color: var(--text-1) !important;
+}
+
+/* ── PRIMARY BUTTON ── */
+.stButton > button[kind="primary"],
+.stButton > button[kind="primary"]:not([disabled]) {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important;
+    border: none !important;
+    border-radius: 11px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    padding: 0.65rem 1.8rem !important;
+    font-size: 0.95rem !important;
+    letter-spacing: 0.02em !important;
+    transition: all 0.2s !important;
+    box-shadow: 0 4px 20px rgba(14,165,233,0.3) !important;
+}
+.stButton > button[kind="primary"]:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 28px rgba(14,165,233,0.45) !important;
+    background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%) !important;
+}
+button[data-testid="baseButton-primary"],
+[data-testid="stFormSubmitButton"] > button {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important;
+    background-color: #0ea5e9 !important;
+    border: none !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+/* ── TABS ── */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 4px;
+    background: rgba(10,30,60,0.5) !important;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 4px;
+}
+.stTabs [data-baseweb="tab"] {
+    border-radius: 9px !important;
+    color: var(--text-3) !important;
+    font-weight: 600 !important;
+    font-size: 0.82rem !important;
+    letter-spacing: 0.02em !important;
+    transition: all 0.2s !important;
+}
+.stTabs [aria-selected="true"] {
+    background: linear-gradient(135deg, rgba(14,165,233,0.3), rgba(56,189,248,0.2)) !important;
+    color: var(--accent-3) !important;
+    box-shadow: inset 0 0 0 1px rgba(56,189,248,0.3) !important;
+}
+
+/* ── ALERTS ── */
+.stAlert { border-radius: 12px !important; }
+.stSuccess { background: rgba(52,211,153,0.08) !important; border-color: rgba(52,211,153,0.25) !important; }
+.stInfo    { background: rgba(56,189,248,0.08) !important; border-color: rgba(56,189,248,0.25) !important; }
+.stError   { background: rgba(248,113,113,0.08) !important; border-color: rgba(248,113,113,0.25) !important; }
+
+/* ── LABELS ── */
+label, .stSlider label, [data-testid="stWidgetLabel"],
+[data-testid="stWidgetLabel"] p, .stRadio label,
+[data-baseweb="radio"] label span {
+    color: #a8d8f0 !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+}
+
 /* ── EMOJI RADIO — besar & jelas ── */
 [data-testid="stRadio"] > div {
     gap: 8px !important;
